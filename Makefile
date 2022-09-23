@@ -24,7 +24,7 @@ kernel-clean:
 	$(MAKE) O=$(BUILD_DIR)/linux -C $(SRC_DIR)/linux distclean
 
 rootfs:
-#sudo qemu-debootstrap --arch armhf bullseye $(BUILD_DIR)/rootfs http://ftp.debian.org/debian
+	sudo qemu-debootstrap --arch armhf bullseye $(BUILD_DIR)/rootfs http://ftp.debian.org/debian
 	@echo "123\n123" | sudo chroot $(BUILD_DIR)/rootfs passwd
 
 rootfs-clean:
