@@ -1,0 +1,6 @@
+[submodule "linux"]
+	path = linux
+	url = https://github.com/torvalds/linux
+[submodule "u-boot"]
+	path = u-boot
+	url = https://source.denx.de/u-boot/u-boot
