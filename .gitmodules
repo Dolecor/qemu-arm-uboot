@@ -4,3 +4,6 @@
 [submodule "u-boot"]
 	path = u-boot
 	url = https://source.denx.de/u-boot/u-boot
+[submodule "pseudo-device-driver"]
+	path = pseudo-device-driver
+	url = https://github.com/Dolecor/pseudo-device-driver.git
