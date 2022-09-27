@@ -12,9 +12,12 @@ ROOTFS_DIR=$(TMP_DIR)/rootfs
 SD_IMG_FILE=$(TMP_DIR)/sd.img
 UIMAGE_FILE=$(SRC_DIR)/linux/arch/arm/boot/uImage
 DTB_FILE=$(SRC_DIR)/u-boot/arch/arm/dts/vexpress-v2p-ca9.dtb
+MODULES_DIR=$(TMP_DIR)/lib/modules
+KERNEL_VERSION=$(shell make -s -C $(SRC_DIR)/linux kernelversion)
+PSEUD_MODULE=$(MODULES_DIR)/$(KERNEL_VERSION)/pseud
 
 all: u-boot kernel rootfs pseud sd-img
-	mkdir tmp
+	mkdir $(TMP_DIR)
 
 u-boot:
 	$(MAKE) -C $(SRC_DIR)/u-boot vexpress_ca9x4_defconfig
@@ -40,19 +43,23 @@ rootfs-clean:
 
 pseud: kernel
 	$(MAKE) -C $(PSEUD_MODULE_SRC) HEADERS=$(SRC_DIR)/linux
+	mkdir -p $(PSEUD_MODULE)
+	cp $(PSEUD_MODULE_SRC)/pseud.ko $(PSEUD_MODULE)/pseud.ko
 
 pseud-clean:
 	$(MAKE) -C $(PSEUD_MODULE_SRC) HEADERS=$(SRC_DIR)/linux clean
+	rm -fr $(PSEUD_MODULE)
 
-sd-img: u-boot kernel rootfs #pseud
+sd-img: u-boot kernel rootfs pseud
 	$(SRC_DIR)/scripts/create_sd_image.sh $(SD_IMG_FILE)
 	$(SRC_DIR)/scripts/copy_to_sd.sh $(SD_IMG_FILE) \
-		$(ROOTFS_DIR) $(UIMAGE_FILE) $(DTB_FILE)
+		$(ROOTFS_DIR) $(UIMAGE_FILE) $(DTB_FILE) $(MODULES_DIR)
 
 sd-img-clean:
 	sudo rm -fr $(SD_IMG_FILE)
 
 clean: u-boot-clean kernel-clean rootfs-clean pseud-clean sd-img-clean
+	rm -fr $(TMP_DIR)
 	
 .PHONY: all u-boot kernel rootfs sd-img \
 	clean kernel-clean u-boot-clean rootfs-clean pseud-clean sd-img-clean

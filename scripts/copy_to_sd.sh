@@ -8,6 +8,7 @@ SD_IMG_FILE=$1
 ROOTFS=$2
 UIMAGE=$3
 DTB=$4
+MODULES=$5
 
 MOUNT_DIR=/mnt/sd
 
@@ -17,6 +18,7 @@ sudo mount $SD_PRIM_PT $MOUNT_DIR
 sudo cp -r $ROOTFS/* $MOUNT_DIR
 sudo cp $UIMAGE $MOUNT_DIR/boot/
 sudo cp $DTB $MOUNT_DIR/boot/
+sudo cp -r $MODULES/* $MOUNT_DIR/lib/modules
 
 sudo umount $SD_PRIM_PT
 sudo losetup --detach $SD_PRIM_PT
