@@ -15,10 +15,10 @@ MOUNT_DIR=/mnt/sd
 SD_PRIM_PT=$(sudo losetup -o $FIRST_SECTOR_OFFSET --find --show $SD_IMG_FILE)
 sudo mount $SD_PRIM_PT $MOUNT_DIR
 
-sudo cp -r $ROOTFS/* $MOUNT_DIR
-sudo cp $UIMAGE $MOUNT_DIR/boot/
-sudo cp $DTB $MOUNT_DIR/boot/
-sudo cp -r $MODULES/* $MOUNT_DIR/lib/modules
+sudo cp -a $ROOTFS/. $MOUNT_DIR
+sudo cp $UIMAGE $MOUNT_DIR/boot
+sudo cp $DTB $MOUNT_DIR/boot
+sudo cp -a $MODULES/. $MOUNT_DIR/lib/modules
 
 sudo umount $SD_PRIM_PT
 sudo losetup --detach $SD_PRIM_PT
