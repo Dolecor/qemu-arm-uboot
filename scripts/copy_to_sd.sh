@@ -9,6 +9,7 @@ ROOTFS=$2
 UIMAGE=$3
 DTB=$4
 MODULES=$5
+UBOOT_ENV=$6
 
 MOUNT_DIR=/mnt/sd
 
@@ -19,6 +20,7 @@ sudo cp -a $ROOTFS/. $MOUNT_DIR
 sudo cp $UIMAGE $MOUNT_DIR/boot
 sudo cp $DTB $MOUNT_DIR/boot
 sudo cp -a $MODULES/. $MOUNT_DIR/lib/modules
+sudo cp $UBOOT_ENV $MOUNT_DIR/boot
 
 sudo umount $SD_PRIM_PT
 sudo losetup --detach $SD_PRIM_PT

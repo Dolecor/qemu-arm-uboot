@@ -1,0 +1,19 @@
+console=ttyS0
+silent_linux=no
+baudrate=115200
+bootdir=boot
+bootfile=uImage
+kernel_addr_r=0x60100000
+fdtfile=vexpress-v2p-ca9.dtb
+fdt_addr_r=0x60000000
+mmcroot=/dev/mmcblk0p1
+mmcpart=1
+mmcargs=setenv bootargs ${bootargs} root=${mmcroot} rootfs=ext4 rw rootwait
+mmcboot=
+	mmc rescan;
+	run mmcargs;
+	ext4load mmc 0:${mmcpart} ${kernel_addr_r} /${bootdir}/${bootfile};
+	ext4load mmc 0:${mmcpart} ${fdt_addr_r} /${bootdir}/${fdtfile};
+	bootm ${kernel_addr_r} - ${fdt_addr_r}
+bootcmd=run mmcboot
+verify=n
