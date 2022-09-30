@@ -21,7 +21,7 @@ UBOOT_ENV_EXACT_SIZE=0x40000
 UBOOT_ENV_TXT=$(SRC_DIR)/uboot.txt
 UBOOT_ENV_IMG=$(MISC_DIR)/uboot.env
 
-all: u-boot kernel rootfs pseud sd-img
+all: u-boot u-boot-env kernel rootfs pseud sd-img
 
 # During `make menuconfig` select Environment and set the following:
 # 	- in EXT4 file system
@@ -33,12 +33,16 @@ u-boot:
 	$(MAKE) -C $(SRC_DIR)/u-boot vexpress_ca9x4_defconfig
 	$(MAKE) -C $(SRC_DIR)/u-boot menuconfig
 	$(MAKE) -C $(SRC_DIR)/u-boot
-	$(SRC_DIR)/u-boot/tools/mkenvimage -s $(UBOOT_ENV_EXACT_SIZE) \
-		-o $(UBOOT_ENV_IMG) $(UBOOT_ENV_TXT)
 
 u-boot-clean:
 	$(MAKE) -C $(SRC_DIR)/u-boot distclean
-	rm -f $(UBOOT_ENV_BASE).env
+
+u-boot-env:
+	$(SRC_DIR)/u-boot/tools/mkenvimage -s $(UBOOT_ENV_EXACT_SIZE) \
+		-o $(UBOOT_ENV_IMG) $(UBOOT_ENV_TXT)
+
+u-boot-env-clean:
+	rm -f $(UBOOT_ENV_IMG)
 
 kernel:
 	$(MAKE) -C $(SRC_DIR)/linux vexpress_defconfig
@@ -66,7 +70,7 @@ pseud-clean:
 	$(MAKE) -C $(PSEUD_MODULE_SRC) HEADERS=$(SRC_DIR)/linux clean
 	rm -fr $(PSEUD_MODULE)
 
-sd-img: u-boot kernel rootfs pseud
+sd-img: u-boot u-boot-env kernel rootfs pseud
 	$(SRC_DIR)/scripts/create_sd_image.sh $(SD_IMG_FILE)
 	$(SRC_DIR)/scripts/copy_to_sd.sh $(SD_IMG_FILE) \
 		$(ROOTFS_DIR) $(UIMAGE_FILE) $(DTB_FILE) $(MODULES_DIR) $(UBOOT_ENV_IMG)
