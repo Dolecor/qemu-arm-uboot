@@ -10,7 +10,7 @@ PSEUD_MODULE_SRC=$(SRC_DIR)/pseudo-device-driver/module
 
 ROOTFS_DIR=$(MISC_DIR)/rootfs
 SD_IMG_FILE=$(MISC_DIR)/sd.img
-UIMAGE_FILE=$(SRC_DIR)/linux/arch/arm/boot/uImage
+UIMAGE_FILE=$(SRC_DIR)/linux/arch/arm/boot/zImage
 DTB_FILE=$(SRC_DIR)/u-boot/arch/arm/dts/vexpress-v2p-ca9.dtb
 MODULES_DIR=$(MISC_DIR)/lib/modules
 KERNEL_VERSION=$(shell cat $(SRC_DIR)/linux/include/config/kernel.release)
@@ -70,7 +70,7 @@ pseud-clean:
 	$(MAKE) -C $(PSEUD_MODULE_SRC) HEADERS=$(SRC_DIR)/linux clean
 	rm -fr $(PSEUD_MODULE)
 
-sd-img: u-boot u-boot-env kernel rootfs pseud
+sd-img: #u-boot u-boot-env kernel rootfs pseud
 	$(SRC_DIR)/scripts/create_sd_image.sh $(SD_IMG_FILE)
 	$(SRC_DIR)/scripts/copy_to_sd.sh $(SD_IMG_FILE) \
 		$(ROOTFS_DIR) $(UIMAGE_FILE) $(DTB_FILE) $(MODULES_DIR) $(UBOOT_ENV_IMG)
