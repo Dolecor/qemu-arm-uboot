@@ -1,7 +1,7 @@
 console=ttyAMA0
 baudrate=115200
 bootdir=boot
-bootfile=zImage
+bootfile=uImage
 kernel_addr_r=0x60100000
 fdtfile=vexpress-v2p-ca9.dtb
 fdt_addr_r=0x60000000
@@ -15,5 +15,5 @@ set_bootargs=run set_console set_rootargs
 
 load_image=ext4load mmc ${mmcdev}:${mmcpart} ${kernel_addr_r} /${bootdir}/${bootfile}
 load_fdt=ext4load mmc ${mmcdev}:${mmcpart} ${fdt_addr_r} /${bootdir}/${fdtfile}
-mmcboot=mmc rescan; run set_bootargs; run load_image load_fdt; echo Running kernel with args: ${bootargs}; bootz ${kernel_addr_r} - ${fdt_addr_r}
+mmcboot=mmc rescan; run set_bootargs; run load_image load_fdt; echo Running kernel with args: ${bootargs}; bootm ${kernel_addr_r} - ${fdt_addr_r}
 bootcmd=run mmcboot;

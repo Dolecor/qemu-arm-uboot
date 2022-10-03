@@ -2,7 +2,7 @@
 
 export ARCH=arm
 export CROSS_COMPILE=arm-linux-gnueabihf-
-export LOADADDR=0x8000
+export LOADADDR=0x60100000
 
 SRC_DIR=$(shell pwd)
 MISC_DIR=$(SRC_DIR)/misc
@@ -10,7 +10,7 @@ PSEUD_MODULE_SRC=$(SRC_DIR)/pseudo-device-driver/module
 
 ROOTFS_DIR=$(MISC_DIR)/rootfs
 SD_IMG_FILE=$(MISC_DIR)/sd.img
-UIMAGE_FILE=$(SRC_DIR)/linux/arch/arm/boot/zImage
+UIMAGE_FILE=$(SRC_DIR)/linux/arch/arm/boot/uImage
 DTB_FILE=$(SRC_DIR)/u-boot/arch/arm/dts/vexpress-v2p-ca9.dtb
 MODULES_DIR=$(MISC_DIR)/lib/modules
 KERNEL_VERSION=$(shell cat $(SRC_DIR)/linux/include/config/kernel.release)
@@ -68,9 +68,9 @@ pseud: kernel
 
 pseud-clean:
 	$(MAKE) -C $(PSEUD_MODULE_SRC) HEADERS=$(SRC_DIR)/linux clean
-	rm -fr $(PSEUD_MODULE)
+	rm -fr $(MODULES_DIR)
 
-sd-img: #u-boot u-boot-env kernel rootfs pseud
+sd-img: u-boot u-boot-env kernel rootfs pseud
 	$(SRC_DIR)/scripts/create_sd_image.sh $(SD_IMG_FILE)
 	$(SRC_DIR)/scripts/copy_to_sd.sh $(SD_IMG_FILE) \
 		$(ROOTFS_DIR) $(UIMAGE_FILE) $(DTB_FILE) $(MODULES_DIR) $(UBOOT_ENV_IMG)
@@ -78,7 +78,7 @@ sd-img: #u-boot u-boot-env kernel rootfs pseud
 sd-img-clean:
 	sudo rm -fr $(SD_IMG_FILE)
 
-clean: u-boot-clean kernel-clean rootfs-clean pseud-clean sd-img-clean
+clean: u-boot-clean u-boot-env-clean kernel-clean rootfs-clean pseud-clean sd-img-clean
 	
 .PHONY: all u-boot kernel rootfs sd-img \
-	clean kernel-clean u-boot-clean rootfs-clean pseud-clean sd-img-clean
+	clean kernel-clean u-boot-clean u-boot-env-clean rootfs-clean pseud-clean sd-img-clean
