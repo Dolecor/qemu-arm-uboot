@@ -1,5 +1,6 @@
 #!/bin/bash
-
+# SPDX-License-Identifier: MIT
+#
 # Create SD card image
 
 source scripts/config.txt

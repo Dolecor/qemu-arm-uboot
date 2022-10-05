@@ -1,5 +1,6 @@
 #!/bin/bash
-
+# SPDX-License-Identifier: MIT
+#
 # Run qemu with artifacts built with Makefile
 
 UBOOT_IMG=$1

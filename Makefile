@@ -38,7 +38,7 @@ u-boot-clean:
 	$(MAKE) -C $(SRC_DIR)/u-boot distclean
 
 u-boot-env:
-	$(SRC_DIR)/u-boot/tools/mkenvimage -s $(UBOOT_ENV_EXACT_SIZE) \
+	mkenvimage -s $(UBOOT_ENV_EXACT_SIZE) \
 		-o $(UBOOT_ENV_IMG) $(UBOOT_ENV_TXT)
 
 u-boot-env-clean:
